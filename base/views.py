@@ -23,14 +23,18 @@ class StudentView(APIView):
     """
     This class handle the CRUD operations for Student
     """
-    def get(self, request):
+    def get(self, request, pk=None):
         """
-        Handle GET requests to return a list of Student objects
+        Handle GET requests to return a list of Student objects or a single Student object
         """
-        my_model = Student.objects.all()
-        serializer = StudentSerializer(my_model, many=True)
+        if pk:
+            my_model = Student.objects.get(pk=pk)
+            serializer = StudentSerializer(my_model)
+            return Response(serializer.data)
+        else:
+            my_model = Student.objects.all()
+            serializer = StudentSerializer(my_model, many=True)
         return Response(serializer.data)
-
 
     def post(self, request):
         """
